@@ -12,11 +12,14 @@ http.createServer(function (request, response) {
    response.writeHead(200, {'Content-Type': 'text/html'});
 
    if (path == "/") {
-      response.end("Hello World. You are requestor #" + counter + 
-         ".<br><a href='/page2'>Page 2</a>\n");
+      response.end("Hello User. You are requestor #" + counter + 
+         ".<br><a href='/page2'>Generate</a>\n");
    }
    else if (path == "/page2") {
-      response.end("This is page 2. <a href='/'>Back.</a>\n");
+      response.end("You player certifcate has been generated. <a href='/'>Back.</a>\n");
+   }
+   else if (path == "/generate") {
+      
    }
 }).listen(port);
 
