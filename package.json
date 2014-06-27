@@ -1,6 +1,9 @@
 {
   "name": "Server",
   "version": "0.0.1",
+  "engines": {
+    "node": "0.10.29"
+  }
   "description": "Generate player certificates.",
   "main": "web.js",
   "scripts": {
@@ -20,8 +23,5 @@
   "dependencies": {
     "express": "^4.4.5",
     "logfmt": "^1.1.2"
-  }
-  "engines": {
-    "node": "0.10.29"
   }
 }
