@@ -18,8 +18,8 @@ http.createServer(function (request, response) {
    else if (path == "/page2") {
       response.end("You player certifcate has been generated. <a href='/'>Back.</a>\n");
    }
-   else if (path == "/generate") {
-      
+   else if (path == "/certificates/") {
+      response.end("eyJ0aW1lU3RhbXAiOiJNb24sIDMwIEp1biAyMDE0IDE5OjU3OjMwICswMDAwIiwibm9uY2UiOiJiMmY4MmRlNjZlYzA2M2EwYjhjY2FlZWQiLCJjbGllbnRJZCI6ImdhbTEiLCJwbGF5ZXJJZCI6ImFiYyJ9.d39a17fcc846b746f30cc8e10f502fa4b6f610684fdc55ea6f9ca615966af1fa");
    }
 }).listen(port);
 
