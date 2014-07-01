@@ -2,9 +2,24 @@ var http = require("http");
 var url = require("url");
 var port = process.env.PORT || 8000;
 var KabamAPI = require("./KabamApi");
+var RevenueTrackingInput = require("./RevenueTrackingInput");
 
 var counter = 0;
 var kabam = new KabamAPI();
+var revTI = new RevenueTrackingInput();
+
+revTI.setTransactionId("danieltestid");
+revTI.setReceipt("danieltestreceipt");
+revTI.setIp("10.0.0.1");
+revTI.setPrice(1990000);
+revTI.setCurrency("USD");
+revTI.setCountry("US");
+revTI.setTransactionType("payment");
+revTI.setProvider("iTunes");
+revTI.setMetadata("testmetadata");
+
+function callback(result) {
+}
 
 http.createServer(function (request, response) {
    counter++;
@@ -13,7 +28,6 @@ http.createServer(function (request, response) {
    var player = url.parse(request.url).search;
 
    console.log("requested=" + path + " counter= " + counter);
-   console.log("url: " + url);
    console.log("player: " + player);
 
    response.writeHead(200, {'Content-Type': 'text/html'});
@@ -32,9 +46,18 @@ http.createServer(function (request, response) {
  
       var playerId = player.substring(i, player.length);
       console.log("id = " + playerId);
+
+      kabam.sendRevenueTracking(revTI, playerId, function (result) {
+         if (result.getSuccess()) {
+            console.log("Revenue tracking reporting successful!");
+         } else {
+            console.log("Revenue tracking reporting failed: " + result.getResponse());
+         }
+      });
       var certificate = kabam.getPlayerCertificate(playerId, null);
       console.log(certificate);
-      response.end(certificate);
+      response.write(certificate);
+      response.end();
    }
    else {
       response.end("Invalid URL.");
