@@ -2,12 +2,13 @@ var http = require("http");
 var url = require("url");
 var port = process.env.PORT || 8000;
 var KabamAPI = require("./KabamApi");
-var RevenueTrackingInput = require("./RevenueTrackingInput");
+//var RevenueTrackingInput = require("./RevenueTrackingInput");
 
 var counter = 0;
 var kabam = new KabamAPI();
-var revTI = new RevenueTrackingInput();
+//var revTI = new RevenueTrackingInput();
 
+/*
 revTI.setTransactionId("danieltestid");
 revTI.setReceipt("danieltestreceipt");
 revTI.setIp("10.0.0.1");
@@ -17,19 +18,41 @@ revTI.setCountry("US");
 revTI.setTransactionType("payment");
 revTI.setProvider("iTunes");
 revTI.setMetadata("testmetadata");
+*/
 
 function callback(result) {
+   if (result.getSuccess()) {
+      console.log("Revenue tracking reporting successful!");
+   } else {
+      console.log("Revenue tracking reporting failed: " + result.getResponse());
+   }
+}
+
+function parse(string) {
+   var i = 0;
+   var str = null;
+
+   if (string) {
+      while (string && string.charAt(i++) != '=')
+         ;
+      str = string.substring(i, string.length);
+   }
+   console.log("parsed = " + str);
+
+   return str;
 }
 
 http.createServer(function (request, response) {
    counter++;
    
    var path = request.url;
-   var player = url.parse(request.url).search;
+   var query = url.parse(request.url).search;
+   var info = parse(query);
 
-   console.log("requested=" + path + " counter= " + counter);
-   console.log("player: " + player);
-
+   if (query) {
+      console.log("requested=" + path + " counter= " + counter);
+      console.log("query: " + query);
+   }
    response.writeHead(200, {'Content-Type': 'text/html'});
 
    if (path == "/") {
@@ -39,25 +62,29 @@ http.createServer(function (request, response) {
    else if (path == "/page2") {
       response.end("You player certifcate has been generated. <a href='/'>Back.</a>\n");
    }
-   else if (path == ("/certificates/" + player)) {
-      var i = 0;
-      while (player.charAt(i++) != '=')
-         ;
- 
-      var playerId = player.substring(i, player.length);
-      console.log("id = " + playerId);
+   else if (path == ("/certificates" + query)) {
+      var certificate = kabam.getPlayerCertificate(info, null);
 
-      kabam.sendRevenueTracking(revTI, playerId, function (result) {
-         if (result.getSuccess()) {
-            console.log("Revenue tracking reporting successful!");
-         } else {
-            console.log("Revenue tracking reporting failed: " + result.getResponse());
-         }
-      });
-      var certificate = kabam.getPlayerCertificate(playerId, null);
       console.log(certificate);
-      response.write(certificate);
-      response.end();
+      response.end(certificate);
+   }
+   else if (path == ("/redeem" + query)) {
+      var result = kabam.verifyLoyaltyRedemptionReceipt(info);
+
+      if(result === null) {
+         console.log("verification failed");
+      } else {
+         console.log("The receipt verification result are: ");
+         console.log("  clientId", result.getClientId());
+         console.log("  playerId", result.getPlayerId());
+         console.log("  productId", result.getProductId());
+         console.log("  price", result.getPrice());
+         console.log("  status", result.getStatus());
+         console.log("  transactionId", result.getTransactionId());
+         console.log("  purchaseTime", result.getPurchaseTime());
+         console.log("  developerPayload", result.getDeveloperPayload());
+         console.log("End of  verification resulit");
+      }
    }
    else {
       response.end("Invalid URL.");
