@@ -63,11 +63,13 @@ http.createServer(function (request, response) {
       response.end("You player certifcate has been generated. <a href='/'>Back.</a>\n");
    }
    else if (path == ("/certificates" + query)) {
+      console.log("generating certificate from " + info + "...");
       var certificate = kabam.getPlayerCertificate(info, null);
 
       console.log(certificate);
       response.end(certificate);
    }
+   /*
    else if (path == ("/redeem" + query)) {
       var result = kabam.verifyLoyaltyRedemptionReceipt(info);
 
@@ -85,7 +87,7 @@ http.createServer(function (request, response) {
          console.log("  developerPayload", result.getDeveloperPayload());
          console.log("End of  verification resulit");
       }
-   }
+   }*/
    else {
       response.end("Invalid URL.");
    }
