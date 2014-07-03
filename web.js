@@ -47,7 +47,7 @@ http.createServer(function (request, response) {
    
    var path = request.url;
    var query = url.parse(request.url).search;
-   var info = parse(query);
+   var info = "" + parse(query);
 
    if (query) {
       console.log("requested=" + path + " counter= " + counter);
