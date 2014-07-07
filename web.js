@@ -69,9 +69,14 @@ http.createServer(function (request, response) {
       response.end(certificate);
    }
    else if (path == ("/redeem" + query)) {
-      response.end(info);      
-      /*
-      var result = kabam.verifyLoyaltyRedemptionReceipt(info);      
+      //response.end(info);      
+      
+//var receipt = '{"receipt":"{\\"clientId\\":\\"u0BV\\",\\"playerId\\":\\"So1gyKCsKoMNOWQ1htfm3nR8SVzTc6\\",\\"productId\\":\\"com.kabam.kbn.loyalty100\\",\\"price\\":100,\\"status\\":\\"charged\\",\\"transactionId\\":\\"52f17a1f0e628701005c0a2e\\",\\"purchaseTime\\":\\"2014-02-04T23:39:11+0000\\",\\"developerPayload\\":\\"testPayload\\"}","signature":"NBBc2y5h60uUy9HXjf0wAXr61ldlAYYtx5Ywuq8lHHrrgD0b94eSLHMa08dxP9eFVV55s8Pn/hF2nl+sw2Y4xcBuimlwF2hjPv/Uqj5zYsnvw69j9KfVXjK7O22Ats6ZIpxZM8pasZTK7DHyiyNOOaWV12E7cwpdtI5KjQPPKO5BfE8GQFl5gypwGrqU6+b4uWVbbsk9pjfHbSUJfvROyrsY4oT8e+bfekxl2bOFr7OMGzYI+YjJBBTl5ZZtq6to0r128cLo/XwlPNWNj/JbwhnTHS3+CwZWjG2Xn+J+9bIFuQxy4OmBFIfnflTk2AwSI9GWYI0Y39vypqwy8Hurgw=="}';
+      //var receipt = '{"payload":"","signature":"ZHxZpSWsSjDW3IZ4I+tpE\/uhWWIqwk+RNYZrPfCCcezQRl7amFgijpDoWBvojaJU\/XZqtYRXDJMQkwnb06b3nCT8A0MiPv0+JLJWbXQS5uhz+\/NdRXzU3LMTT6qREa9+AOPH80v3C8vBAfqxlXtwFjihksyYB4cHnuIMgksixwnjGK3nvlGq3W7Mie6ke9f2HFFyEWnKwfLhCs1n\/8tXz5EBfdOOYqgpRtXsdSXmqBGsNeJmMG19eY49GBe3Wdte11y3OLpYnW89lzeZnnm9zFZ+JOpByG7P1ulRWov2ayhJyeq67aeBouN\/0ydRqxnuPrkL1VrHx6k\/JaeY8GKNQw==","receipt":"{\"clientId\":\"gam1\",\"playerId\":\"abc\",\"productId\":\"testproduct-270643af-01b8-4fe0-a042-940f84590c39\",\"price\":1,\"status\":\"charged\",\"transactionId\":\"53baed1ceb4fcd056c42404a\",\"purchaseTime\":\"2014-07-07T18:55:24+0000\",\"developerPayload\":\"\"}"}';
+      var receipt = info;
+      receipt = receipt.replace('\\\"', '\\\\\"');
+      receipt = "{" + receipt.substring(2, receipt.length);
+      var result = kabam.verifyLoyaltyRedemptionReceipt(receipt);
 
       if(result === null) {
          console.log("verification failed");
@@ -89,7 +94,7 @@ http.createServer(function (request, response) {
          console.log("End of  verification resulit");
          response.end("SUCCESS");
       }
-      */
+      
    }
    else {
       response.end("Invalid URL.");
