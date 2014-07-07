@@ -80,6 +80,7 @@ http.createServer(function (request, response) {
 
       if(result === null) {
          console.log("verification failed");
+         response.end("FAILED");
       } else {
          console.log("The receipt verification result are: ");
          console.log("  clientId", result.getClientId());
@@ -91,6 +92,7 @@ http.createServer(function (request, response) {
          console.log("  purchaseTime", result.getPurchaseTime());
          console.log("  developerPayload", result.getDeveloperPayload());
          console.log("End of  verification resulit");
+         response.end("SUCCESS");
       }
    }
    else {
