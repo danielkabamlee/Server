@@ -27,7 +27,7 @@ function callback(result) {
       console.log("Revenue tracking reporting failed: " + result.getResponse());
    }
 }
-/*
+
 function parse(string) {
    var i = 0;
    var str = null;
@@ -37,17 +37,16 @@ function parse(string) {
          ;
       str = string.substring(i, string.length);
    }
-   console.log("parsed = " + str);
 
    return str;
 }
-*/
+
 http.createServer(function (request, response) {
    counter++;
    
    var path = request.url;
    var query = url.parse(request.url).search;
-   //var info = parse(query);
+   var info = parse(query);
 
    if (query) {
       console.log("requested=" + path + " counter= " + counter);
@@ -63,20 +62,16 @@ http.createServer(function (request, response) {
       response.end("You player certifcate has been generated. <a href='/'>Back.</a>\n");
    }
    else if (path == ("/certificates" + query)) {
-      var i = 0;
-
-      while (query.charAt(i++) != '=')
-         ;
-
-      var playerId = query.substring(i, query.length);
-      console.log("generating certificate from " + playerId + "...");
-      var certificate = kabam.getPlayerCertificate(playerId, null);
+      console.log("generating certificate from " + info + "...");
+      var certificate = kabam.getPlayerCertificate(info, null);
 
       console.log(certificate);
       response.end(certificate);
    }
    else if (path == ("/redeem" + query)) {
-      var result = kabam.verifyLoyaltyRedemptionReceipt(info);
+      response.end(info);      
+      /*
+      var result = kabam.verifyLoyaltyRedemptionReceipt(info);      
 
       if(result === null) {
          console.log("verification failed");
@@ -94,6 +89,7 @@ http.createServer(function (request, response) {
          console.log("End of  verification resulit");
          response.end("SUCCESS");
       }
+      */
    }
    else {
       response.end("Invalid URL.");
