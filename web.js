@@ -27,7 +27,7 @@ function callback(result) {
       console.log("Revenue tracking reporting failed: " + result.getResponse());
    }
 }
-
+/*
 function parse(string) {
    var i = 0;
    var str = null;
@@ -41,13 +41,13 @@ function parse(string) {
 
    return str;
 }
-
+*/
 http.createServer(function (request, response) {
    counter++;
    
    var path = request.url;
    var query = url.parse(request.url).search;
-   var info = "" + parse(query);
+   //var info = parse(query);
 
    if (query) {
       console.log("requested=" + path + " counter= " + counter);
@@ -63,13 +63,18 @@ http.createServer(function (request, response) {
       response.end("You player certifcate has been generated. <a href='/'>Back.</a>\n");
    }
    else if (path == ("/certificates" + query)) {
-      console.log("generating certificate from " + info + "...");
-      var certificate = kabam.getPlayerCertificate(info, null);
+      var i = 0;
+
+      while (query.charAt(i++) != '=')
+         ;
+
+      var playerId = query.substring(i, query.length);
+      console.log("generating certificate from " + playerId + "...");
+      var certificate = kabam.getPlayerCertificate(playerId, null);
 
       console.log(certificate);
       response.end(certificate);
    }
-   /*
    else if (path == ("/redeem" + query)) {
       var result = kabam.verifyLoyaltyRedemptionReceipt(info);
 
@@ -87,7 +92,7 @@ http.createServer(function (request, response) {
          console.log("  developerPayload", result.getDeveloperPayload());
          console.log("End of  verification resulit");
       }
-   }*/
+   }
    else {
       response.end("Invalid URL.");
    }
